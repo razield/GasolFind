@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -28,6 +29,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -64,6 +75,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -179,7 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void updatePlaces(){
+    public void updatePlaces() throws IOException {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -201,15 +218,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
        // String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&types=food&name=cruise&key=AIzaSyCHJPP9eHsur6Vu2wuHtyq4SFn_wx7bTME";
         String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
                 "json?location="+lat+","+lng+
-                "&radius=10000&sensor=true" +
-                "&types=gas_station"+
+                "&radius=1000&sensor=true" +
+                "&types=gasolinera"+
                 "&key=AIzaSyCHJPP9eHsur6Vu2wuHtyq4SFn_wx7bTME";
         //Link con el json
         Log.d("test", placesSearchStr);
 
         //Se debe convertir el respond del server a json y leerlo directamente
+        BufferedReader reader = null;
+        JSONObject json;
 
+        try {
+            URL url = new URL(placesSearchStr);
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuffer buffer = new StringBuffer();
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1)
+                buffer.append(chars, 0, read);
 
+            json = new JSONObject(buffer.toString());
+
+            JSONArray places = json.getJSONArray("results");
+
+            if (placeMarkers != null) {
+                for (int i = 0; i < placeMarkers.length; i++) {
+                    if (placeMarkers[i] != null) {
+                        placeMarkers[i].remove();
+                    }
+                }
+            }
+
+            placeMarkers = new Marker[places.length()];
+
+            for (int i = 0; i < places.length(); i++) {
+                JSONObject place_obj = places.getJSONObject(i);
+
+                double place_lat = place_obj.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+                double place_lng = place_obj.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+                String place_name = place_obj.getString("name");
+                String icon = place_obj.getString("icon");
+                url = new URL(icon);
+
+                Log.d("place", String.valueOf(place_lat));
+                Log.d("place", String.valueOf(place_lng));
+                Log.d("place", place_name);
+
+                LatLng LatLng = new LatLng(place_lat, place_lng);
+
+                Marker marker = mMap.addMarker(new MarkerOptions().position(LatLng).title(place_name));
+
+                placeMarkers[i] = marker;
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null)
+                reader.close();
+        }
 
 
 
