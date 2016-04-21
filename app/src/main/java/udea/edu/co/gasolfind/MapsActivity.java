@@ -2,6 +2,7 @@ package udea.edu.co.gasolfind;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,6 +13,9 @@ import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -40,7 +44,9 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+import udea.edu.co.gasolfind.Class.ConvertJSON;
+
+public class MapsActivity extends FragmentActivity implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -67,6 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MarkerOptions[] places;
 
     private boolean updateFinished = true;
+    Button btn1, btn2, btn3, btn4, btn5;
 
     //********************************************************************
 
@@ -75,29 +82,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        /*//get drawable IDs***************************************
-        userIcon = R.drawable.yellow_point;
-        foodIcon = R.drawable.red_point;
-        drinkIcon = R.drawable.blue_point;
-        shopIcon = R.drawable.green_point;
-        otherIcon = R.drawable.purple_point;*/
-
-
         //Tomando permisos del API
         if (mGoogleApiClient == null) {
-            // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
-            // See https://g.co/AppIndexing/AndroidStudio for more information.
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
@@ -106,18 +100,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .addApi(LocationServices.API)
                     .addApi(AppIndex.API).build();
         }
-    }
 
+        btn1 = (Button)findViewById(R.id.boton1);
+        btn2 = (Button)findViewById(R.id.boton2);
+        btn3 = (Button)findViewById(R.id.boton3);
+        btn4 = (Button)findViewById(R.id.boton4);
+        btn5 = (Button)findViewById(R.id.boton5);
+        btn1.setOnClickListener((View.OnClickListener) this);
+        btn2.setOnClickListener((View.OnClickListener) this);
+        btn3.setOnClickListener((View.OnClickListener) this);
+        btn4.setOnClickListener((View.OnClickListener) this);
+        btn5.setOnClickListener((View.OnClickListener) this);
+    }
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.boton1:
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                break;
+            case R.id.boton2:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+            case R.id.boton3:
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                break;
+            case R.id.boton4:
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case R.id.boton5:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+                break;
+        }
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        //Como crear un marcador
-        /*
-            LatLng marca1 = new LatLng(mLastLocation.getLatitude()+0.005, mLastLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(marca1).title("Marca 1"));
-        */
-
         //Para activar mi localización
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -126,11 +142,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         //Boton de localización
         mMap.setMyLocationEnabled(true);
-
-
     }
 
-    //Guia del Google*************************************
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
@@ -170,11 +183,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-    //**********************************************************
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.e(null, "Entra al onConnect");
         //Conexion al API
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -196,7 +207,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void updatePlaces() throws IOException {
+    public void updatePlaces() throws IOException, JSONException {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -210,79 +221,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //removiendo alguna marca existente
         if(userMarker != null)userMarker.remove();
         //Creando y modificando las propiedades de las marcas
-        userMarker = mMap.addMarker(new MarkerOptions().position(lastLatLng).title("Aqui estas"));
 
         //moviendo la localizacion
         mMap.animateCamera(CameraUpdateFactory.newLatLng(lastLatLng), 3000, null);
-        //HAciendo el query para el llamado json de los places
-       // String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&types=food&name=cruise&key=AIzaSyCHJPP9eHsur6Vu2wuHtyq4SFn_wx7bTME";
-        String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
-                "json?location="+lat+","+lng+
-                "&radius=1000&sensor=true" +
-                "&types=gasolinera"+
-                "&key=AIzaSyCHJPP9eHsur6Vu2wuHtyq4SFn_wx7bTME";
-        //Link con el json
-        Log.d("test", placesSearchStr);
 
-        //Se debe convertir el respond del server a json y leerlo directamente
-        BufferedReader reader = null;
-        JSONObject json;
-
-        try {
-            URL url = new URL(placesSearchStr);
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuffer buffer = new StringBuffer();
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1)
-                buffer.append(chars, 0, read);
-
-            json = new JSONObject(buffer.toString());
-
-            JSONArray places = json.getJSONArray("results");
-
-            if (placeMarkers != null) {
-                for (int i = 0; i < placeMarkers.length; i++) {
-                    if (placeMarkers[i] != null) {
-                        placeMarkers[i].remove();
-                    }
-                }
-            }
-
-            placeMarkers = new Marker[places.length()];
-
-            for (int i = 0; i < places.length(); i++) {
-                JSONObject place_obj = places.getJSONObject(i);
-
-                double place_lat = place_obj.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
-                double place_lng = place_obj.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
-                String place_name = place_obj.getString("name");
-                String icon = place_obj.getString("icon");
-                url = new URL(icon);
-
-                Log.d("place", String.valueOf(place_lat));
-                Log.d("place", String.valueOf(place_lng));
-                Log.d("place", place_name);
-
-                LatLng LatLng = new LatLng(place_lat, place_lng);
-
-                Marker marker = mMap.addMarker(new MarkerOptions().position(LatLng).title(place_name));
-
-                placeMarkers[i] = marker;
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null)
-                reader.close();
-        }
-
-
-
+        //Implementando metodos en con ConverJSON
+        ConvertJSON convertJSON = new ConvertJSON(lat, lng);
+        convertJSON.get_Markers(mMap, placeMarkers);
     }
 
 
