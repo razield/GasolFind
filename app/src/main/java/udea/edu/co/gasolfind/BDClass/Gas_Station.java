@@ -1,17 +1,22 @@
 package udea.edu.co.gasolfind.BDClass;
 
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+
+import com.google.android.gms.maps.model.LatLng;
+
 
 /**
  * Created by Juan Felipe Zuluaga on 12/04/2016.
  * Modelo DB para  the Gas_Station modo standAlone
  */
-public  class Gas_Station {
-    private DBHelper dbHelper;
-    private SQLiteDatabase sqLiteDatabase;
+public  class Gas_Station  {
+
+
     public static final String TABLE_NAME = "gas_station"; // nombre de la tabla
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_LAT = "_lat";
@@ -23,6 +28,7 @@ public  class Gas_Station {
     public static final String COLUMN_GAS = "_gas";
     public static final String COLUMN_ACPM = "_acpm";
     public static final String COLUMN_RATE = "_rate";
+
     public static final String CREATE_TABLE = "create table " + TABLE_NAME + " ("
             + COLUMN_ID + " TEXT not null primary key, "
             + COLUMN_NAME + " TEXT not null, "
@@ -35,80 +41,105 @@ public  class Gas_Station {
             + COLUMN_ACPM + " REAL, "
             + COLUMN_RATE + " REAL);";
 
+    private DBHelper_Gas_Station dbHelper_gas_station;
+    private SQLiteDatabase db;
 
-    public void DataBaseManager(Context context) {
-        dbHelper = new DBHelper(context);
-        sqLiteDatabase = dbHelper.getWritableDatabase();
-    }
+    public Gas_Station(Context context){
+        dbHelper_gas_station = new DBHelper_Gas_Station(context);
+        db = dbHelper_gas_station.getWritableDatabase();
 
-
-    private ContentValues getValues_Gas_Station(String id, double lat, double lng, String name, String address, float pgasoline, float rgasoline, float gas, float acpm, float rate){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ID, id);
-        contentValues.put(COLUMN_NAME, name);
-        contentValues.put(COLUMN_LAT, lat);
-        contentValues.put(COLUMN_LNG, lng);
-        contentValues.put(COLUMN_ADDRESS, address);
-        contentValues.put(COLUMN_P_GASOLINE, pgasoline);
-        contentValues.put(COLUMN_R_GASOLINE, rgasoline);
-        contentValues.put(COLUMN_GAS, gas);
-        contentValues.put(COLUMN_ACPM, acpm);
-        contentValues.put(COLUMN_RATE, rate);
-        return contentValues;
-    }
-    //Insertando en la BD de Gas_Station
-    //INSERT FUNCTIONS:
-    public void insert_Gas_Station(String id, String name, double lat, double lng){
-        sqLiteDatabase.insert(TABLE_NAME,null, getValues_Gas_Station(id, lat, lng, name, "no address", -1, -1, -1, -1, -1) );
     }
 
-    //UPDATES FUNCTIONS: para actualizar alguno de los datos de la BD
-    public void update_Address(String id, String address){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ADDRESS, address);
-        sqLiteDatabase.update(TABLE_NAME, contentValues, COLUMN_ID + "=?", new String[]{id});
-    }
-    public void update_PGasoline(String id, float pgasoline){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_P_GASOLINE, pgasoline);
-        sqLiteDatabase.update(TABLE_NAME, contentValues, COLUMN_ID + "=?", new String[]{id});
-    }
-    public void update_RGasoline(String id, float rgasoline){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_R_GASOLINE, rgasoline);
-        sqLiteDatabase.update(TABLE_NAME, contentValues, COLUMN_ID + "=?", new String[]{id});
-    }
-    public void update_Gas(String id, float gas){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_GAS, gas);
-        sqLiteDatabase.update(TABLE_NAME, contentValues, COLUMN_ID + "=?", new String[]{id});
-    }
-    public void update_ACPM(String id, float acpm){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ACPM, acpm);
-        sqLiteDatabase.update(TABLE_NAME, contentValues, COLUMN_ID + "=?", new String[]{id});
-    }
-    public void update_Rate(String id, float  rate){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_RATE, rate);
-        sqLiteDatabase.update(TABLE_NAME, contentValues, COLUMN_ID + "=?", new String[]{id});
-    }
-    public  void delete_Gas_Station(String id) {
-        sqLiteDatabase.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{id});
-    }
-    public boolean exist_Gas_Station(String id){
-        String[] args = new String[] {id};
+    private ContentValues generateContentValues(String id, double lat, double lng, String name, String address, float p_pgasoline, float p_rgasoline, float p_gas, float p_acpm, float rate){
 
-        Cursor cursor = sqLiteDatabase.query(TABLE_NAME,null,COLUMN_ID +"=?", args,null,null,null );
-        if(cursor != null){
-            return true;
-        }else {
-            return false;
-        }
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_ID, id);
+        values.put(COLUMN_NAME, name);
+        values.put(COLUMN_LAT, lat);
+        values.put(COLUMN_LNG, lng);
+        values.put(COLUMN_ADDRESS, address);
+        values.put(COLUMN_P_GASOLINE, p_pgasoline);
+        values.put(COLUMN_R_GASOLINE, p_rgasoline);
+        values.put(COLUMN_GAS, p_gas);
+        values.put(COLUMN_ACPM, p_acpm);
+        values.put(COLUMN_RATE, rate);
+
+        return values;
     }
-    public Cursor gas_Station(String id){
-        String[] args = new String[]{id};
-        String[] arg = new String[]{COLUMN_NAME, COLUMN_ADDRESS,  COLUMN_P_GASOLINE, COLUMN_R_GASOLINE, COLUMN_GAS, COLUMN_ACPM, COLUMN_RATE};
-        return  sqLiteDatabase.query(TABLE_NAME,arg,COLUMN_ID +"=?", args,null,null,null );
+
+
+
+
+    public void create(String id, double lat, double lng, String name, String address, float p_pgasoline, float p_rgasoline, float p_gas, float p_acpm, float rate){
+        db.insert(TABLE_NAME, null, generateContentValues(id, lat, lng, name, address, p_pgasoline, p_rgasoline, p_gas, p_acpm, rate));
+    }
+
+    public void delete(String id) {
+        db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{id});
+    }
+
+    public void update_price_RegularGasoline(String id, float p_rgasoline){
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_R_GASOLINE, p_rgasoline);
+
+        db.update(TABLE_NAME, values, COLUMN_ID + "=?", new String[]{id});
+    }
+
+    public void update_price_PremiumGasoline(String id, float p_pgasoline){
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_P_GASOLINE, p_pgasoline);
+
+        db.update(TABLE_NAME, values, COLUMN_ID + "=?", new String[]{id});
+    }
+    public void update_price_ACPM(String id, float acpm){
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_GAS, acpm);
+
+        db.update(TABLE_NAME, values, COLUMN_ID + "=?", new String[]{id});
+    }
+
+    public void update_price_GAS(String id, float gas){
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_GAS, gas);
+
+        db.update(TABLE_NAME, values, COLUMN_ID + "=?", new String[]{id});
+    }
+
+
+    public Cursor load_For_Location(double lat, double lng){
+        String[] columns = new String[]{
+                COLUMN_ID,
+                COLUMN_NAME,
+                COLUMN_LAT,
+                COLUMN_LNG,
+                COLUMN_ADDRESS,
+                COLUMN_P_GASOLINE,
+                COLUMN_R_GASOLINE,
+                COLUMN_GAS,
+                COLUMN_ACPM,
+                COLUMN_RATE,
+        };
+        String query = COLUMN_LAT + "=? AND " + COLUMN_LNG + "=?";
+
+        return db.query(TABLE_NAME, columns, query, new String[]{String.valueOf(lat), String.valueOf(lng)}, null, null, null);
+    }
+
+    public Cursor load(String id){
+        String[] columns = new String[]{
+                COLUMN_ID,
+                COLUMN_NAME,
+                COLUMN_LAT,
+                COLUMN_LNG,
+                COLUMN_ADDRESS,
+                COLUMN_P_GASOLINE,
+                COLUMN_R_GASOLINE,
+                COLUMN_GAS,
+                COLUMN_ACPM,
+                COLUMN_RATE,
+        };
+        String query = COLUMN_ID + "=?";
+
+        return db.query(TABLE_NAME, columns, query, new String[]{id}, null, null, null);
     }
 }

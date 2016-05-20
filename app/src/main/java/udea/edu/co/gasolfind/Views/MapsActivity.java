@@ -1,10 +1,12 @@
 package udea.edu.co.gasolfind.Views;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -12,9 +14,12 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -31,7 +36,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import android.support.v7.app.AppCompatActivity;
+
 
 import org.json.JSONException;
 
@@ -41,35 +47,19 @@ import udea.edu.co.gasolfind.BDClass.Gas_Station;
 import udea.edu.co.gasolfind.ControlFunctions.ConvertJSON;
 import udea.edu.co.gasolfind.R;
 
-public class MapsActivity extends FragmentActivity implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapsActivity extends FragmentActivity implements  View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    private Gas_Station gas_station = new Gas_Station();
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private int PLACE_PICKER_REQUEST = 1;
-    //instance variables for Marker icon drawable resources
-    private int userIcon, foodIcon, drinkIcon, shopIcon, otherIcon;
-
-    //***************gitHub examble!!!!!!
-    //the map
-    private GoogleMap theMap;
-
-    //location manager
     private LocationManager locMan;
-
-    //user marker
     private Marker userMarker;
-
-    //places of interest
     private Marker[] placeMarkers;
-    //max
-    private final int MAX_PLACES = 20;//most returned from google
-    //marker options
-    private MarkerOptions[] places;
-
-    private boolean updateFinished = true;
     Button btn1, btn2, btn3, btn4, btn5;
+    ImageView edit1, edit2, edit3, edit4, edit5;
+    private Gas_Station gas_station;
+
 
     //********************************************************************
 
@@ -96,20 +86,19 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                     .addApi(LocationServices.API)
                     .addApi(AppIndex.API).build();
         }
-
         btn1 = (Button)findViewById(R.id.boton1);
         btn2 = (Button)findViewById(R.id.boton2);
         btn3 = (Button)findViewById(R.id.boton3);
         btn4 = (Button)findViewById(R.id.boton4);
         btn5 = (Button)findViewById(R.id.boton5);
-        btn1.setOnClickListener((View.OnClickListener) this);
-        btn2.setOnClickListener((View.OnClickListener) this);
-        btn3.setOnClickListener((View.OnClickListener) this);
-        btn4.setOnClickListener((View.OnClickListener) this);
-        btn5.setOnClickListener((View.OnClickListener) this);
 
-
+        btn1.setOnClickListener( this);
+        btn2.setOnClickListener( this);
+        btn3.setOnClickListener(this);
+        btn4.setOnClickListener(this);
+        btn5.setOnClickListener(this);
     }
+
     public void onClick(View view){
         switch (view.getId()){
             case R.id.boton1:
@@ -138,7 +127,7 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
         }
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setMyLocationEnabled(true);
-       mMap.setInfoWindowAdapter(new Content_View(getApplicationContext()));
+        mMap.setInfoWindowAdapter(new Content_View(getApplicationContext()));
     }
 
     protected void onStart() {
@@ -205,19 +194,13 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
         Location lastLoc = locMan.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         double lat = lastLoc.getLatitude();
         double lng = lastLoc.getLongitude();
-
-        //Creando la posición
         LatLng lastLatLng = new LatLng(lat, lng);
-
         if(userMarker != null)userMarker.remove();
-        //moviendo la localizacion
         mMap.animateCamera(CameraUpdateFactory.newLatLng(lastLatLng), 3000, null);
-
-        //Implementando metodos en con ConverJSON
-        ConvertJSON convertJSON = new ConvertJSON(lat, lng);
-        convertJSON.get_Markers(mMap, placeMarkers, gas_station);
+        ConvertJSON convertJSON = new ConvertJSON(lat, lng, this.getApplicationContext());
+        //Recorriendo todo el json, y marcando en el mapa
+        convertJSON.get_Markers(mMap, placeMarkers);
     }
-
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -229,8 +212,5 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.e("prueba", "Entra al conec failed");
     }
-
-
-
 
 }

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<LinearLayout
+    android:theme="@style/Theme.AppCompat.Light"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackGround"
     android:padding="10dp">
@@ -23,6 +25,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
                 <TextView
                     android:hint="titulo"
                     android:layout_width="wrap_content"
@@ -31,20 +34,46 @@
                     android:textStyle="bold"
                     android:textSize="12dp"
                     android:textColor="@color/text"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
                 <TextView
-                    android:hint="info"
-                    android:layout_width="wrap_content"
+                    android:hint="Dirección"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="5"
                     android:id="@+id/info"
                     android:textSize="10dp"
+                    android:textStyle="bold"
                     android:textColor="@color/text"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
                 <TextView
                     android:hint="Precio:Gasolina Corriente"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/priceRG"
+                    android:textStyle="bold"
                     android:textSize="10dp"
                     android:textColor="@color/text"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
                 <TextView
                     android:hint="Precio:Gas"
                     android:layout_width="wrap_content"
@@ -53,6 +82,13 @@
                     android:textStyle="bold"
                     android:textSize="12dp"
                     android:textColor="@color/text"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
                 <TextView
                     android:hint="Precio:Gasolina Premium"
                     android:layout_width="wrap_content"
@@ -61,6 +97,15 @@
                     android:textStyle="bold"
                     android:textSize="12dp"
                     android:textColor="@color/text"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
                 <TextView
                     android:hint="Precio:ACPM"
                     android:layout_width="wrap_content"
@@ -69,7 +114,9 @@
                     android:textStyle="bold"
                     android:textSize="12dp"
                     android:textColor="@color/text"/>
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
-</ScrollView>
+</LinearLayout>

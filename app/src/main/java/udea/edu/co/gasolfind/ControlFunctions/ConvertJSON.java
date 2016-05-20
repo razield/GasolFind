@@ -1,6 +1,8 @@
 package udea.edu.co.gasolfind.ControlFunctions;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -27,6 +29,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
+import udea.edu.co.gasolfind.BDClass.DBHelper_Gas_Station;
 import udea.edu.co.gasolfind.BDClass.Gas_Station;
 import udea.edu.co.gasolfind.R;
 
@@ -38,20 +41,23 @@ public class ConvertJSON {
     double lat;
     double lng;
     public Array array = null;
+    private Gas_Station gas_station;
 
     /*
     ConverJSON: recibe las ubicaciones actuales del usuario, para capturar la url que contiene
     el json con las coordenadas de los places a buscar en este caso es 'gas_station' "
      */
-    public ConvertJSON(double lat, double lng){
+    public ConvertJSON(double lat, double lng, Context context){
+        gas_station = new Gas_Station(context);
         BufferedReader reader = null;
         this.lat = lat;
         this.lng = lng;
         String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
                 "json?location="+lat+","+lng+
-                "&radius=2000&sensor=true" +
+                "&radius=1500&sensor=true" +
                 "&types=gas_station&&establishment"+
                 "&key=AIzaSyCHJPP9eHsur6Vu2wuHtyq4SFn_wx7bTME";
+        Log.d("link", placesSearchStr);
         try {
             URL url = new URL(placesSearchStr);
             reader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -85,22 +91,8 @@ public class ConvertJSON {
         JSONArray jsonArray = jsonObject.getJSONArray("results");
         return jsonArray;
     }
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            return null;
-        }
-    }
 
-
-    public void get_Markers(GoogleMap mMap, Marker []markers, Gas_Station gas_station) throws JSONException {
+    public void get_Markers(GoogleMap mMap, Marker []markers) throws JSONException {
         JSONObject place_obj;
         if (markers != null) {
             for (int i = 0; i < markers.length; i++) {
@@ -119,13 +111,13 @@ public class ConvertJSON {
         for(int i = 0; i < getJSONArray().length(); i++) {
 
             place_obj = getJSONArray().getJSONObject(i);
-            String place_id = place_obj.getString("id");
-            Log.d("id ", place_id);
-
             double place_lat = place_obj.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
             double place_lng = place_obj.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+            String place_id = place_obj.get("place_id").toString();
             String place_name = place_obj.getString("name");
+            String place_address = place_obj.getString("vicinity");
             LatLng LatLng = new LatLng(place_lat, place_lng);
+
             Marker marker = mMap.addMarker(new MarkerOptions().position(LatLng).title(place_name));
             Location location = new Location("");
 
@@ -135,18 +127,23 @@ public class ConvertJSON {
             Float distance = user_location.distanceTo(location);
 
             Log.d("distance", String.valueOf(distance));
-            String string = "11111";
-            marker.setSnippet("Esto es algo raro" + string);
 
-            if(distance < 9044000){
+            Cursor cursor = gas_station.load(place_id);
+            if(cursor.getCount() == 0){
+                gas_station.create(place_id, place_lat, place_lng, place_name, place_address, 0, 0, 0, 0, 0);
+            }
+
+            if(distance <= 9044000){
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.gas_station_green));
-            }else if(distance >= 9044000 && distance < 9045000){
+            }else if(distance > 9044000 && distance <= 9044500){
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.gas_station_yellow));
             }else{
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.gas_station_red));
             }
 
             markers[i] = marker;
+
+
         }
     }
 
