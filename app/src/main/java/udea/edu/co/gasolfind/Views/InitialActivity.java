@@ -1,6 +1,7 @@
 package udea.edu.co.gasolfind.Views;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
@@ -21,7 +22,7 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
-    private static final boolean AUTO_HIDE = true;
+    private static final boolean AUTO_HIDE = false;
 
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
@@ -102,7 +103,7 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggle();
+                // toggle();
             }
         });
 
@@ -121,7 +122,7 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(100);
+        // delayedHide(100);
     }
 
     private void toggle() {
@@ -136,7 +137,7 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.hide();
+            // actionBar.hide();
         }
         mControlsView.setVisibility(View.GONE);
         mVisible = false;
@@ -175,15 +176,19 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         if (v.getId() == R.id.map_type) {
-            editor.putBoolean("show_map", true);
+            editor.putBoolean("show_map", false);
             editor.putBoolean("first_time", false);
             editor.apply();
-            finish();
+
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
         } else if (v.getId() == R.id.list_type) {
             editor.putBoolean("show_map", false);
             editor.putBoolean("first_time", false);
             editor.apply();
-            finish();
+
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
     }
 }

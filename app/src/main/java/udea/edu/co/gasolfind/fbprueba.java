@@ -1,7 +1,10 @@
 package udea.edu.co.gasolfind;
 import udea.edu.co.gasolfind.Firebasegasolfind.FirebaseGasolfind;
+import udea.edu.co.gasolfind.Interfaces.DBListener;
 
-public class fbprueba {
+public class fbprueba implements DBListener {
+
+    private int action;
 
     public fbprueba() {
 
@@ -38,12 +41,21 @@ public class fbprueba {
         fb.actualizarPrecioGasolina("-KK6PcabS_GJkSxyR28b","ACPM","15000");
         */
 
-        boolean b = fb.existeEstacion("-KK6PcabS_GJkSxyR28b");
-        System.out.println("---------------+++++++++++++ EXISTE O NO: " + b);
+        action = 0;
+
+        fb.existeEstacion(this, "-KK6PcabS_GJkSxyR28b");
     }
 
-    public static void resultadoEstacion(boolean b){
-        System.out.println("mmmmmmmmmmmmmmmm: " + b);
-        b2 = b;
+    @Override
+    public void onResult(Object object) {
+        switch (action) {
+            // Existe estación
+            case 0:
+                boolean b = (boolean) object;
+
+                System.out.println("---------------+++++++++++++ EXISTE O NO: " + b);
+
+                break;
+        }
     }
 }

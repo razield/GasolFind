@@ -66,6 +66,12 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
 
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
@@ -117,7 +123,8 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
                 mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 break;
             case R.id.boton5:
-                mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
         }
     }

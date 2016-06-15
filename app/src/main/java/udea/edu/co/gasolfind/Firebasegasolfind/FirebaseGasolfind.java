@@ -7,6 +7,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import udea.edu.co.gasolfind.Interfaces.DBListener;
 import udea.edu.co.gasolfind.Modelos.Comentario;
 import udea.edu.co.gasolfind.Modelos.Estacion;
 import udea.edu.co.gasolfind.Modelos.TipoGasolina;
@@ -16,6 +18,8 @@ import udea.edu.co.gasolfind.fbprueba;
 public class FirebaseGasolfind {
 
     private DatabaseReference mDatabase;
+
+    private DBListener dbListener;
 
     private final String USUARIOS = "usuarios";
     private final String ESTACIONES = "estaciones";
@@ -61,7 +65,7 @@ public class FirebaseGasolfind {
     }
 
     public void registrarTipoGasolina(String estacion_id, String nombreGasolina, String precioGasolina){
-        //String clave =  mDatabase.child("estaciones").child(estacion_id).child("tipos_gasolina").push().getKey();
+        // String clave =  mDatabase.child("estaciones").child(estacion_id).child("tipos_gasolina").push().getKey();
         String clave = nombreGasolina;
         TipoGasolina tipoGasolina = new TipoGasolina(clave, precioGasolina);
         Map<String, Object> nuevoTipoGasolina = tipoGasolina.toMap();
@@ -88,7 +92,9 @@ public class FirebaseGasolfind {
         return true;
     }
 
-    public boolean existeEstacion(String place_id){
+    public boolean existeEstacion(final DBListener listener, String place_id){
+
+        dbListener = listener;
 
         mDatabase.child(ESTACIONES).child(place_id).addListenerForSingleValueEvent(
 
@@ -105,8 +111,9 @@ public class FirebaseGasolfind {
                             resultado = true;
                         }
 
-                        fbprueba.resultadoEstacion(resultado);
-                        //cambiarExistenciaEstacion(resultado);
+                        listener.onResult(resultado);
+                        // fbprueba.resultadoEstacion(resultado);
+                        // cambiarExistenciaEstacion(resultado);
 
                     }
                     @Override

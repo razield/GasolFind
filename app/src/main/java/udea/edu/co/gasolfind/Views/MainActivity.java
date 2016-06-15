@@ -61,13 +61,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         updateMenu();
 
-        if (sharedPreferences.getBoolean("first_time", true)) {
-            Intent intent = new Intent(this, InitialActivity.class);
+        // if (sharedPreferences.getBoolean("first_time", true)) {
+        //     Intent intent = new Intent(this, InitialActivity.class);
 
-            startActivity(intent);
+        //     startActivity(intent);
 
-            return;
-        } else if (sharedPreferences.getBoolean("show_map", true)) {
+        //     return;
+        // } else if (sharedPreferences.getBoolean("show_map", true)) {
+        if (sharedPreferences.getBoolean("show_map", true)) {
             fragment = new MapFragment();
 
             listView.setItemChecked(0, true);
