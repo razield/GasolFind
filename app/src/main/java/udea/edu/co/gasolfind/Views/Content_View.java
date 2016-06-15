@@ -33,6 +33,7 @@ public class Content_View  implements GoogleMap.InfoWindowAdapter {
         myContentsView = View.inflate(contex, R.layout.view_content, null);
         gas_station = new Gas_Station(contex);
 
+
 	}
 
     @Override
@@ -84,6 +85,12 @@ public class Content_View  implements GoogleMap.InfoWindowAdapter {
             this.marker.showInfoWindow();
         }
         return null;
+    }
+
+    public void actualizarBD(){
+
+        //Buscar conexión con el API
+
     }
 
 }

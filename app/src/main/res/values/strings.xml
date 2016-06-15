@@ -1,6 +1,42 @@
 <resources>
     <string name="app_name">GasolFind</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Mapa</string>
+
+    <string-array name="options">
+        <item>Mapa</item>
+        <item>Lista</item>
+        <item>Configuración</item>
+        <item>Acerca</item>
+        <item>Iniciar sesión / Registrarse</item>
+    </string-array>
+
+    <string-array name="options_logged">
+        <item>Mapa</item>
+        <item>Lista</item>
+        <item>Configuración</item>
+        <item>Acerca</item>
+        <item>Cerrar sesión</item>
+    </string-array>
+
+    <string name="title_activity_main">GasolFind</string>
+
+    <string name="initial_help_text">Selecciona cómo quieres ver las estaciones. Puedes cambiar de vista en el momento que quieras.</string>
+    <string name="map_button">Mapa</string>
+    <string name="list_button">Lista</string>
+
+    <string name="about">Acerca</string>
+
+    <string name="hybrid_button">Híbrido</string>
+    <string name="normal_button">Normal</string>
+    <string name="terrain_button">Terreno</string>
+    <string name="satellite_button">Satélite</string>
+
+    <string name="data_required">Correo electrónico y contraseña requeridos, intenta de nuevo.</string>
+
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="register">Registrar</string>
+    <string name="login">Login</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -18,5 +54,68 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="title_activity_initial">InitialActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
 
 </resources>

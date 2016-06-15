@@ -31,7 +31,9 @@ import java.util.Objects;
 
 import udea.edu.co.gasolfind.BDClass.DBHelper_Gas_Station;
 import udea.edu.co.gasolfind.BDClass.Gas_Station;
+import udea.edu.co.gasolfind.Firebasegasolfind.FirebaseGasolfind;
 import udea.edu.co.gasolfind.R;
+import udea.edu.co.gasolfind.fbprueba;
 
 /**
  * Created by Juan Felipe Zuluaga on 7/04/2016.
@@ -42,6 +44,7 @@ public class ConvertJSON {
     double lng;
     public Array array = null;
     private Gas_Station gas_station;
+    //public FirebaseGasolfind fb;
 
     /*
     ConverJSON: recibe las ubicaciones actuales del usuario, para capturar la url que contiene
@@ -49,6 +52,7 @@ public class ConvertJSON {
      */
     public ConvertJSON(double lat, double lng, Context context){
         gas_station = new Gas_Station(context);
+        //fb = new FirebaseGasolfind();
         BufferedReader reader = null;
         this.lat = lat;
         this.lng = lng;

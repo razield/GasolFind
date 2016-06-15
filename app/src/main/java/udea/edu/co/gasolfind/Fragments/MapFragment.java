@@ -1,23 +1,22 @@
-package udea.edu.co.gasolfind.Views;
+package udea.edu.co.gasolfind.Fragments;
+
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -36,8 +35,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import android.support.v7.app.AppCompatActivity;
-
 
 import org.json.JSONException;
 
@@ -46,9 +43,12 @@ import java.io.IOException;
 import udea.edu.co.gasolfind.BDClass.Gas_Station;
 import udea.edu.co.gasolfind.ControlFunctions.ConvertJSON;
 import udea.edu.co.gasolfind.R;
-import udea.edu.co.gasolfind.fbprueba;
+import udea.edu.co.gasolfind.Views.Content_View;
 
-public class MapsActivity extends FragmentActivity implements  View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class MapFragment extends Fragment implements  View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -61,27 +61,28 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
     ImageView edit1, edit2, edit3, edit4, edit5;
     private Gas_Station gas_station;
 
-
-    //********************************************************************
+    public MapFragment() {
+        // Required empty public constructor
+    }
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
+
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
-        fbprueba fb = new fbprueba();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         //Tomando permisos del API
         if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
+            mGoogleApiClient = new GoogleApiClient.Builder(this.getContext())
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(Places.GEO_DATA_API)
@@ -89,17 +90,19 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
                     .addApi(LocationServices.API)
                     .addApi(AppIndex.API).build();
         }
-        btn1 = (Button)findViewById(R.id.boton1);
-        btn2 = (Button)findViewById(R.id.boton2);
-        btn3 = (Button)findViewById(R.id.boton3);
-        btn4 = (Button)findViewById(R.id.boton4);
-        btn5 = (Button)findViewById(R.id.boton5);
+        btn1 = (Button) view.findViewById(R.id.boton1);
+        btn2 = (Button) view.findViewById(R.id.boton2);
+        btn3 = (Button) view.findViewById(R.id.boton3);
+        btn4 = (Button) view.findViewById(R.id.boton4);
+        btn5 = (Button) view.findViewById(R.id.boton5);
 
-        btn1.setOnClickListener( this);
-        btn2.setOnClickListener( this);
+        btn1.setOnClickListener(this);
+        btn2.setOnClickListener(this);
         btn3.setOnClickListener(this);
         btn4.setOnClickListener(this);
         btn5.setOnClickListener(this);
+
+        return view;
     }
 
     public void onClick(View view){
@@ -125,15 +128,15 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         //Para activar mi localización
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setMyLocationEnabled(true);
-        mMap.setInfoWindowAdapter(new Content_View(getApplicationContext()));
+        mMap.setInfoWindowAdapter(new Content_View(this.getContext()));
     }
 
-    protected void onStart() {
+    public void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
         Action viewAction = Action.newAction(
@@ -145,7 +148,7 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
         AppIndex.AppIndexApi.start(mGoogleApiClient, viewAction);
     }
 
-    protected void onStop() {
+    public void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
         Action viewAction = Action.newAction(
@@ -157,12 +160,12 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
         AppIndex.AppIndexApi.end(mGoogleApiClient, viewAction);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(this, data);
+            if (resultCode == FragmentActivity.RESULT_OK) {
+                Place place = PlacePicker.getPlace(this.getContext(), data);
                 String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getContext(), toastMsg, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -170,7 +173,7 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
     @Override
     public void onConnected(Bundle bundle) {
         //Conexion al API
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -179,7 +182,7 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
             LatLng myLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             //Colocando la camara en mi localización
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
-            locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locMan = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             //Cadacierto tiempo esta actualizando la ubicación
             // locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 100, this);
             try {
@@ -191,7 +194,7 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
     }
 
     public void updatePlaces() throws IOException, JSONException {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         Location lastLoc = locMan.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -200,7 +203,7 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
         LatLng lastLatLng = new LatLng(lat, lng);
         if(userMarker != null)userMarker.remove();
         mMap.animateCamera(CameraUpdateFactory.newLatLng(lastLatLng), 3000, null);
-        ConvertJSON convertJSON = new ConvertJSON(lat, lng, this.getApplicationContext());
+        ConvertJSON convertJSON = new ConvertJSON(lat, lng, this.getContext());
         //Recorriendo todo el json, y marcando en el mapa
         convertJSON.get_Markers(mMap, placeMarkers);
     }
@@ -215,5 +218,4 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.e("prueba", "Entra al conec failed");
     }
-
 }

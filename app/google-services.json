@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "662063406192",
+    "firebase_url": "https://gasolfindudea.firebaseio.com",
+    "project_id": "gasolfindudea",
+    "storage_bucket": "gasolfindudea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662063406192:android:949008ebe7062168",
+        "android_client_info": {
+          "package_name": "udea.edu.co.gasolfind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "662063406192-pnl8dklr9r1qgtjir87ajm6irdtvhqjk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdH_V7jjtpuUPJeAJDR40rY-9bv0ACV5g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

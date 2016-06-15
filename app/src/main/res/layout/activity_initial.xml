@@ -1,0 +1,55 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#0099cc"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="udea.edu.co.gasolfind.Views.InitialActivity">
+
+    <RelativeLayout
+        android:background="#ddd"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+
+        <TextView
+            android:id="@+id/fullscreen_content"
+            android:text="@string/initial_help_text"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:textColor="#444"
+            android:textStyle="bold"
+            android:keepScreenOn="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/fullscreen_content_controls"
+        android:background="@color/black_overlay"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+
+        <Button
+            style="?metaButtonBarButtonStyle"
+            android:id="@+id/map_type"
+            android:text="@string/map_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="setType" />
+
+        <Button
+            style="?metaButtonBarButtonStyle"
+            android:id="@+id/list_type"
+            android:text="@string/list_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="setType" />
+    </LinearLayout>
+</LinearLayout>
