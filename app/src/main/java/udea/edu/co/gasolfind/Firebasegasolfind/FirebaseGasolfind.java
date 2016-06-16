@@ -35,6 +35,7 @@ public class FirebaseGasolfind {
     private float precio_acpm;
     private float precio_gas;
     private boolean existe_estacion;
+    private Parametros data;
 
     public FirebaseGasolfind() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -125,8 +126,9 @@ public class FirebaseGasolfind {
                     }
 
                 });
+        this.data = datos;
         System.out.println("****FireBAseObtene" + datos.isExisteEstacion());
-        return datos;
+        return data;
     }
 
     public float obtenerPrecioRegular(final DBListener listener, Parametros datos){

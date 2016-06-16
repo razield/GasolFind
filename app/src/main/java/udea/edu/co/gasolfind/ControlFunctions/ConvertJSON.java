@@ -146,20 +146,9 @@ public class ConvertJSON implements DBListener {
             if(cursor.getCount() == 0){
                 Log.d("PrimerIF", "En el if");
                 action = 0;
-                firebaseGasolfind.existeEstacion(this, datos);
-
-            }else{
-                Log.d("PrimerIF", "En el else");
-                //gasolina = firebaseGasolfind.obtenerPrecioRegular(this, datos.getPlace_id());
-                //acpm = firebaseGasolfind.obtenerPrecioACPM(this,place_id);
-                //gas = firebaseGasolfind.obtenerPrecioGas(this, place_id);
-                //premium = firebaseGasolfind.obtenerPrecioPremium(this, place_id);
-                //gas_station.update_price_ACPM(place_id, acpm);
-                //gas_station.update_price_GAS(place_id, gas);
-                //gas_station.update_price_PremiumGasoline(place_id, premium);
-                //gas_station.update_price_RegularGasoline(place_id, gasolina);
-
+                gas_station.create(place_id, place_lat, place_lng, place_name, place_address, 0, 0, 0, 0, 0);
             }
+            firebaseGasolfind.existeEstacion(this, datos);
 
             if(distance <= 9044000){
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.gas_station_green));
@@ -168,10 +157,7 @@ public class ConvertJSON implements DBListener {
             }else{
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.gas_station_red));
             }
-
             markers[i] = marker;
-
-
         }
     }
 
@@ -181,7 +167,6 @@ public class ConvertJSON implements DBListener {
             // Existe estación
             case 0:
                 Parametros datos = (Parametros) object;
-                //boolean b = (boolean) object;
                 System.out.println("****" + datos.isExisteEstacion());
                 if(datos.isExisteEstacion()){
                     Log.d("En el segundo if", "En el if");
@@ -190,11 +175,18 @@ public class ConvertJSON implements DBListener {
                     datos.setGas(String.valueOf(firebaseGasolfind.obtenerPrecioGas(this, datos)));
                     datos.setAcpm(String.valueOf(firebaseGasolfind.obtenerPrecioACPM(this, datos)));
                     datos.setPremium(String.valueOf(firebaseGasolfind.obtenerPrecioPremium(this, datos)));
+                    gas_station.update_price_ACPM(datos.getPlace_id(), Float.parseFloat(datos.getAcpm()));
+                    gas_station.update_price_PremiumGasoline(datos.getPlace_id(), Float.parseFloat(datos.getPremium()));
+                    gas_station.update_price_RegularGasoline(datos.getPlace_id(), Float.parseFloat(datos.gasolina));
+                    gas_station.update_price_GAS(datos.getPlace_id(), Float.parseFloat(datos.getGas()));
 
                 }else{
                     Log.d("En el segundo if---", "En el else");
-                    firebaseGasolfind.registrarEstacion(datos.getPlace_id(), "0","0",datos.getName(), "11", datos.getAddress(), String.valueOf(datos.getLat()),String.valueOf(datos.getLng()),"24 horas");
-                    gas_station.create(datos.getPlace_id(), Double.parseDouble(datos.getLat()), Double.parseDouble(datos.getLng()), datos.getName(), datos.getAddress(), 0, 0, 0, 0, 0);
+                    //Cursor cursor = gas_station.load(place_id);
+                    //System.out.println("columnas " + cursor.getCount() + "place_id " + place_id);
+                    //firebaseGasolfind.registrarEstacion(place_id, "0","0",datos.getName(), "11", datos.getAddress(), String.valueOf(datos.getLat()),String.valueOf(datos.getLng()),"24 horas");
+                    //System.out.println("///// " + datos.getPlace_id());
+                    //gas_station.create(datos.getPlace_id(), Double.parseDouble(datos.getLat()), Double.parseDouble(datos.getLng()), datos.getName(), datos.getAddress(), 0, 0, 0, 0, 0);
                 }
 
 
