@@ -169,17 +169,17 @@ public class ConvertJSON implements DBListener {
         if (existe) {
             Log.d("En el segundo if", "En el if");
 
-            datos.setGasolina(String.valueOf(firebaseGasolfind.obtenerPrecioRegular(this, datos)));
-            datos.setGas(String.valueOf(firebaseGasolfind.obtenerPrecioGas(this, datos)));
-            datos.setAcpm(String.valueOf(firebaseGasolfind.obtenerPrecioACPM(this, datos)));
-            datos.setPremium(String.valueOf(firebaseGasolfind.obtenerPrecioPremium(this, datos)));
+            firebaseGasolfind.obtenerPrecioRegular(this, datos);
+            firebaseGasolfind.obtenerPrecioGas(this, datos);
+            firebaseGasolfind.obtenerPrecioACPM(this, datos);
+            firebaseGasolfind.obtenerPrecioPremium(this, datos);
 
         } else {
             Log.d("En el segundo if---", "En el else");
 
-            Cursor cursor = gas_station.load(datos.getPlace_id());
+            // Cursor cursor = gas_station.load(datos.getPlace_id());
 
-            System.out.println("columnas " + cursor.getCount() + "place_id " + datos.getPlace_id());
+            // System.out.println("columnas " + cursor.getCount() + "place_id " + datos.getPlace_id());
 
             firebaseGasolfind.registrarEstacion(datos.getPlace_id(), "0","0",datos.getName(), "11", datos.getAddress(), String.valueOf(datos.getLat()),String.valueOf(datos.getLng()),"24 horas");
 
