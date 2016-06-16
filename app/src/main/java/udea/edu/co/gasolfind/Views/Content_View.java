@@ -65,6 +65,7 @@ public class Content_View  implements GoogleMap.InfoWindowAdapter{
             System.out.println("-----Vística");
             System.out.println("------- cantidad: " + cursor.getCount());
             cursor.moveToFirst();
+            System.out.println("Que es esto" + cursor.getString(1));
             tittleTextView.setText(cursor.getString(1));
             infoTextView.setText(cursor.getString(4));
             ratingBar.setNumStars(3);
