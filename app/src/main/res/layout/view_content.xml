@@ -57,6 +57,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <RatingBar
+                    android:id="@+id/rating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:stepSize="1.0"
+                    android:rating="2.0"
+                    android:scaleX="0.5"
+                    android:scaleY="0.5"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
                 <TextView
                     android:hint="Precio:Gasolina Corriente"
                     android:layout_width="wrap_content"

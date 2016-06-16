@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.support.v4.content.ParallelExecutorCompat;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -26,25 +27,31 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import udea.edu.co.gasolfind.BDClass.DBHelper_Gas_Station;
 import udea.edu.co.gasolfind.BDClass.Gas_Station;
 import udea.edu.co.gasolfind.Firebasegasolfind.FirebaseGasolfind;
+import udea.edu.co.gasolfind.Interfaces.DBListener;
 import udea.edu.co.gasolfind.R;
 import udea.edu.co.gasolfind.fbprueba;
 
 /**
  * Created by Juan Felipe Zuluaga on 7/04/2016.
  */
-public class ConvertJSON {
+public class ConvertJSON implements DBListener {
     JSONObject jsonObject;
     double lat;
     double lng;
     public Array array = null;
     private Gas_Station gas_station;
-    //public FirebaseGasolfind fb;
+    public FirebaseGasolfind firebaseGasolfind;
+    public int action = 0;
+    public float gasolina, acpm, gas, premium, rate;
+
 
     /*
     ConverJSON: recibe las ubicaciones actuales del usuario, para capturar la url que contiene
@@ -52,7 +59,7 @@ public class ConvertJSON {
      */
     public ConvertJSON(double lat, double lng, Context context){
         gas_station = new Gas_Station(context);
-        //fb = new FirebaseGasolfind();
+        firebaseGasolfind = new FirebaseGasolfind();
         BufferedReader reader = null;
         this.lat = lat;
         this.lng = lng;
@@ -132,9 +139,26 @@ public class ConvertJSON {
 
             Log.d("distance", String.valueOf(distance));
 
+
+            Parametros datos = new Parametros(false, place_id, place_name, String.valueOf(place_lat), String.valueOf(place_lng), place_address, "0", "0", "0","0", "0");
             Cursor cursor = gas_station.load(place_id);
+
             if(cursor.getCount() == 0){
-                gas_station.create(place_id, place_lat, place_lng, place_name, place_address, 0, 0, 0, 0, 0);
+                Log.d("PrimerIF", "En el if");
+                action = 0;
+                firebaseGasolfind.existeEstacion(this, datos);
+
+            }else{
+                Log.d("PrimerIF", "En el else");
+                //gasolina = firebaseGasolfind.obtenerPrecioRegular(this, datos.getPlace_id());
+                //acpm = firebaseGasolfind.obtenerPrecioACPM(this,place_id);
+                //gas = firebaseGasolfind.obtenerPrecioGas(this, place_id);
+                //premium = firebaseGasolfind.obtenerPrecioPremium(this, place_id);
+                //gas_station.update_price_ACPM(place_id, acpm);
+                //gas_station.update_price_GAS(place_id, gas);
+                //gas_station.update_price_PremiumGasoline(place_id, premium);
+                //gas_station.update_price_RegularGasoline(place_id, gasolina);
+
             }
 
             if(distance <= 9044000){
@@ -151,4 +175,41 @@ public class ConvertJSON {
         }
     }
 
+    @Override
+    public void onResult(Object object) {
+        switch (action) {
+            // Existe estación
+            case 0:
+                Parametros datos = (Parametros) object;
+                //boolean b = (boolean) object;
+                System.out.println("****" + datos.isExisteEstacion());
+                if(datos.isExisteEstacion()){
+                    Log.d("En el segundo if", "En el if");
+
+                    datos.setGasolina(String.valueOf(firebaseGasolfind.obtenerPrecioRegular(this, datos)));
+                    datos.setGas(String.valueOf(firebaseGasolfind.obtenerPrecioGas(this, datos)));
+                    datos.setAcpm(String.valueOf(firebaseGasolfind.obtenerPrecioACPM(this, datos)));
+                    datos.setPremium(String.valueOf(firebaseGasolfind.obtenerPrecioPremium(this, datos)));
+
+                }else{
+                    Log.d("En el segundo if---", "En el else");
+                    firebaseGasolfind.registrarEstacion(datos.getPlace_id(), "0","0",datos.getName(), "11", datos.getAddress(), String.valueOf(datos.getLat()),String.valueOf(datos.getLng()),"24 horas");
+                    gas_station.create(datos.getPlace_id(), Double.parseDouble(datos.getLat()), Double.parseDouble(datos.getLng()), datos.getName(), datos.getAddress(), 0, 0, 0, 0, 0);
+                }
+
+
+        }
+    }
+
+    @Override
+    public void onResultRegular(Object object) {
+        switch (action) {
+            case 0:
+                float f = (float) object;
+
+
+                break;
+
+        }
+    }
 }

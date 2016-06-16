@@ -1,4 +1,5 @@
 package udea.edu.co.gasolfind;
+import udea.edu.co.gasolfind.ControlFunctions.Parametros;
 import udea.edu.co.gasolfind.Firebasegasolfind.FirebaseGasolfind;
 import udea.edu.co.gasolfind.Interfaces.DBListener;
 
@@ -15,9 +16,11 @@ public class fbprueba implements DBListener {
         String claveUsuario1 = fb.registrarUsuario("ensayo1", "correo1@mail.com");
         String claveUsuario2 = fb.registrarUsuario("ensayo2", "correo2@mail.com");
         String claveUsuario3 = fb.registrarUsuario("ensayo3", "correo3@mail.com");
+*/
 
         // Hay que añadir lo del place_id que es con Juan Felipe
-        fb.registrarEstacion("-KK6PcabS_GJkSxyR28b", "12","4.6","EssoMobile","1234567","CalleX CarreraY","-25.6456","84.5645","L-D 5 a 20");
+        fb.registrarEstacion("ChIJgT1hgd8oRI4Rnt6R-Cwcx_0", "12","4.6","EssoMobile","1234567","CalleX CarreraY","-25.6456","84.5645","L-D 5 a 20");
+        /*
         fb.registrarEstacion("-KK6Pcao8XvkAsKF0NGp", "24","2.6","Exxon","7654321","Carrera M CarreraN","-25.6456","84.5645","L-D 5 a 20");
         fb.registrarEstacion("-KK6Pcam3QuDAgkV3AyD", "36","2.1","Pirat","7564542","Calle3 Carrera4","-25.6456","84.5645","L-D 5 a 20");
         fb.registrarEstacion("-KK6PcaksUtEQsADo-As", "48","2.5","Bar-Ata","7564231","Calle6 CarreraO","-25.6456","84.5645","L-D 5 a 20");
@@ -42,8 +45,7 @@ public class fbprueba implements DBListener {
         */
 
         action = 0;
-
-        fb.existeEstacion(this, "-KK6PcabS_GJkSxyR28b");
+        //fb.existeEstacion(this, "-olamundo");
     }
 
     @Override
@@ -51,10 +53,19 @@ public class fbprueba implements DBListener {
         switch (action) {
             // Existe estación
             case 0:
-                boolean b = (boolean) object;
+                Parametros datos = (Parametros) object;
+                //boolean b = (boolean) object;
 
-                System.out.println("---------------+++++++++++++ EXISTE O NO: " + b);
+                //System.out.println("---------------+++++++++++++ EXISTE O NO: " + b);
 
+                break;
+        }
+    }
+    @Override
+    public void onResultRegular(Object object) {
+        switch (action) {
+            case 0:
+                float f = (float) object;
                 break;
         }
     }

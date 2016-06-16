@@ -1,4 +1,5 @@
 package udea.edu.co.gasolfind.Firebasegasolfind;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -8,6 +9,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import udea.edu.co.gasolfind.ControlFunctions.Parametros;
 import udea.edu.co.gasolfind.Interfaces.DBListener;
 import udea.edu.co.gasolfind.Modelos.Comentario;
 import udea.edu.co.gasolfind.Modelos.Estacion;
@@ -28,6 +30,10 @@ public class FirebaseGasolfind {
     private final String PRECIOGASOLINA = "precio_gasolina";
     private final String NUMEROCALIFICACIONES = "numero_calificaciones";
     private final String PROMEDIOCALIFICACIONES = "promedio_calificaciones";
+    private float precio_regular;
+    private float precio_premium;
+    private float precio_acpm;
+    private float precio_gas;
     private boolean existe_estacion;
 
     public FirebaseGasolfind() {
@@ -84,34 +90,31 @@ public class FirebaseGasolfind {
     }
 
 
-    private void cambiarExistenciaEstacion(boolean b){
-        existe_estacion = b;
-    }
 
-    public boolean existeEstacion2(String place_id){
-        return true;
-    }
+    public Parametros existeEstacion(final DBListener listener, Parametros datos){
 
-    public boolean existeEstacion(final DBListener listener, String place_id){
-
-        dbListener = listener;
-
-        mDatabase.child(ESTACIONES).child(place_id).addListenerForSingleValueEvent(
+        //dbListener = listener;
+        System.out.println("*********** placeid: " + datos.getPlace_id());
+        mDatabase.child(ESTACIONES).child(datos.getPlace_id()).addListenerForSingleValueEvent(
 
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Estacion e = dataSnapshot.getValue(Estacion.class);
+                        Parametros resultados = new Parametros(true, "place_id", "name", "0.0", "0.0", "address", "phone", "0.0", "0.0", "0.0", "0.0");
+
                         boolean resultado;
                         if (e == null) {
-                            System.out.println("-------------------- siiiiiiiiii");
-                            resultado = false;
-                        } else {
-                            System.out.println("-------------------- nooooooooooooo");
-                            resultado = true;
-                        }
+                            // System.out.println("-------------------- siiiiiiiiii");
+                            //resultado = false;
 
-                        listener.onResult(resultado);
+                            resultados.setExisteEstacion(false);
+                        } else {
+                            // System.out.println("-------------------- nooooooooooooo");
+                            resultados.setExisteEstacion(true);
+                        }
+                        System.out.println("****FireBAse" + resultados.isExisteEstacion());
+                        listener.onResult(resultados);
                         // fbprueba.resultadoEstacion(resultado);
                         // cambiarExistenciaEstacion(resultado);
 
@@ -122,7 +125,116 @@ public class FirebaseGasolfind {
                     }
 
                 });
-        return existe_estacion;
+        System.out.println("****FireBAseObtene" + datos.isExisteEstacion());
+        return datos;
+    }
+
+    public float obtenerPrecioRegular(final DBListener listener, Parametros datos){
+
+        dbListener = listener;
+        mDatabase.child(ESTACIONES).child(datos.getPlace_id()).child("tipos_gasolina").child("REGULAR").addListenerForSingleValueEvent(
+
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String e = dataSnapshot.getValue(String.class);
+                        float resultado;
+                        if (e == null) {
+                            resultado = 0;
+                        } else {
+                            resultado = Float.parseFloat(e);
+                        }
+
+                        listener.onResultRegular(resultado);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // error
+                    }
+
+                });
+        return precio_regular;
+    }
+
+    public float obtenerPrecioPremium(final DBListener listener, Parametros datos){
+
+        dbListener = listener;
+        mDatabase.child(ESTACIONES).child(datos.getPlace_id()).child("tipos_gasolina").child("PREMIUM").addListenerForSingleValueEvent(
+
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String e = dataSnapshot.getValue(String.class);
+                        float resultado;
+                        if (e == null) {
+                            resultado = 0;
+                        } else {
+                            resultado = Float.parseFloat(e);
+                        }
+
+                        listener.onResultRegular(resultado);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // error
+                    }
+
+                });
+        return precio_premium;
+    }
+
+    public float obtenerPrecioACPM(final DBListener listener, Parametros datos){
+
+        dbListener = listener;
+        mDatabase.child(ESTACIONES).child(datos.getPlace_id()).child("tipos_gasolina").child("ACPM").addListenerForSingleValueEvent(
+
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String e = dataSnapshot.getValue(String.class);
+                        float resultado;
+                        if (e == null) {
+                            resultado = 0;
+                        } else {
+                            resultado = Float.parseFloat(e);
+                        }
+
+                        listener.onResultRegular(resultado);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // error
+                    }
+
+                });
+        return precio_acpm;
+    }
+
+    public float obtenerPrecioGas(final DBListener listener, Parametros datos){
+
+        dbListener = listener;
+        mDatabase.child(ESTACIONES).child(datos.getPlace_id()).child("tipos_gasolina").child("GAS").addListenerForSingleValueEvent(
+
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String e = dataSnapshot.getValue(String.class);
+                        float resultado;
+                        if (e == null) {
+                            resultado = 0;
+                        } else {
+                            resultado = Float.parseFloat(e);
+                        }
+
+                        listener.onResultRegular(resultado);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // error
+                    }
+
+                });
+        return precio_gas;
     }
 }
 

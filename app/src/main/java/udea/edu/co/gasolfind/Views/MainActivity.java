@@ -25,6 +25,7 @@ import udea.edu.co.gasolfind.Fragments.AboutFragment;
 import udea.edu.co.gasolfind.Fragments.ListFragment;
 import udea.edu.co.gasolfind.Fragments.MapFragment;
 import udea.edu.co.gasolfind.R;
+import udea.edu.co.gasolfind.fbprueba;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         FirebaseAuth.AuthStateListener {
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //fbprueba f = new fbprueba();
+
 
         Fragment fragment;
 

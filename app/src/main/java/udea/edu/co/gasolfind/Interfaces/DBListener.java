@@ -5,4 +5,7 @@ package udea.edu.co.gasolfind.Interfaces;
  */
 public interface DBListener {
     public void onResult(Object object);
+    public void onResultRegular(Object object);
 }
+
+
