@@ -140,12 +140,12 @@ public class FirebaseGasolfind {
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String e = dataSnapshot.getValue(String.class);
+                        Float e = dataSnapshot.getValue(Float.class);
                         float resultado;
                         if (e == null) {
                             resultado = 0;
                         } else {
-                            resultado = Float.parseFloat(e);
+                            resultado = e;
                         }
 
                         listener.onResultRegular(datos, resultado);
@@ -167,12 +167,12 @@ public class FirebaseGasolfind {
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String e = dataSnapshot.getValue(String.class);
+                        Float e = dataSnapshot.getValue(Float.class);
                         float resultado;
                         if (e == null) {
                             resultado = 0;
                         } else {
-                            resultado = Float.parseFloat(e);
+                            resultado = e;
                         }
 
                         listener.onResultPremium(datos, resultado);
@@ -194,12 +194,12 @@ public class FirebaseGasolfind {
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String e = dataSnapshot.getValue(String.class);
+                        Float e = dataSnapshot.getValue(Float.class);
                         float resultado;
                         if (e == null) {
                             resultado = 0;
                         } else {
-                            resultado = Float.parseFloat(e);
+                            resultado = e;
                         }
 
                         listener.onResultACPM(datos, resultado);
@@ -221,12 +221,12 @@ public class FirebaseGasolfind {
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String e = dataSnapshot.getValue(String.class);
+                        Float e = dataSnapshot.getValue(Float.class);
                         float resultado;
                         if (e == null) {
                             resultado = 0;
                         } else {
-                            resultado = Float.parseFloat(e);
+                            resultado = e;
                         }
 
                         listener.onResultGas(datos, resultado);
