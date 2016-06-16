@@ -162,46 +162,49 @@ public class ConvertJSON implements DBListener {
     }
 
     @Override
-    public void onResult(Object object) {
-        switch (action) {
-            // Existe estación
-            case 0:
-                Parametros datos = (Parametros) object;
-                System.out.println("****" + datos.isExisteEstacion());
-                if(datos.isExisteEstacion()){
-                    Log.d("En el segundo if", "En el if");
+    public void onResult(Parametros datos, boolean existe) {
+        // Parametros datos = (Parametros) object;
+        // System.out.println("****" + datos.isExisteEstacion());
 
-                    datos.setGasolina(String.valueOf(firebaseGasolfind.obtenerPrecioRegular(this, datos)));
-                    datos.setGas(String.valueOf(firebaseGasolfind.obtenerPrecioGas(this, datos)));
-                    datos.setAcpm(String.valueOf(firebaseGasolfind.obtenerPrecioACPM(this, datos)));
-                    datos.setPremium(String.valueOf(firebaseGasolfind.obtenerPrecioPremium(this, datos)));
-                    gas_station.update_price_ACPM(datos.getPlace_id(), Float.parseFloat(datos.getAcpm()));
-                    gas_station.update_price_PremiumGasoline(datos.getPlace_id(), Float.parseFloat(datos.getPremium()));
-                    gas_station.update_price_RegularGasoline(datos.getPlace_id(), Float.parseFloat(datos.gasolina));
-                    gas_station.update_price_GAS(datos.getPlace_id(), Float.parseFloat(datos.getGas()));
+        if(existe){
+            Log.d("En el segundo if", "En el if");
 
-                }else{
-                    Log.d("En el segundo if---", "En el else");
-                    //Cursor cursor = gas_station.load(place_id);
-                    //System.out.println("columnas " + cursor.getCount() + "place_id " + place_id);
-                    //firebaseGasolfind.registrarEstacion(place_id, "0","0",datos.getName(), "11", datos.getAddress(), String.valueOf(datos.getLat()),String.valueOf(datos.getLng()),"24 horas");
-                    //System.out.println("///// " + datos.getPlace_id());
-                    //gas_station.create(datos.getPlace_id(), Double.parseDouble(datos.getLat()), Double.parseDouble(datos.getLng()), datos.getName(), datos.getAddress(), 0, 0, 0, 0, 0);
-                }
+            datos.setGasolina(String.valueOf(firebaseGasolfind.obtenerPrecioRegular(this, datos)));
+            datos.setGas(String.valueOf(firebaseGasolfind.obtenerPrecioGas(this, datos)));
+            datos.setAcpm(String.valueOf(firebaseGasolfind.obtenerPrecioACPM(this, datos)));
+            datos.setPremium(String.valueOf(firebaseGasolfind.obtenerPrecioPremium(this, datos)));
+            gas_station.update_price_ACPM(datos.getPlace_id(), Float.parseFloat(datos.getAcpm()));
+            gas_station.update_price_PremiumGasoline(datos.getPlace_id(), Float.parseFloat(datos.getPremium()));
+            gas_station.update_price_RegularGasoline(datos.getPlace_id(), Float.parseFloat(datos.gasolina));
+            gas_station.update_price_GAS(datos.getPlace_id(), Float.parseFloat(datos.getGas()));
 
-
+        }else{
+            Log.d("En el segundo if---", "En el else");
+            //Cursor cursor = gas_station.load(place_id);
+            //System.out.println("columnas " + cursor.getCount() + "place_id " + place_id);
+            //firebaseGasolfind.registrarEstacion(place_id, "0","0",datos.getName(), "11", datos.getAddress(), String.valueOf(datos.getLat()),String.valueOf(datos.getLng()),"24 horas");
+            //System.out.println("///// " + datos.getPlace_id());
+            //gas_station.create(datos.getPlace_id(), Double.parseDouble(datos.getLat()), Double.parseDouble(datos.getLng()), datos.getName(), datos.getAddress(), 0, 0, 0, 0, 0);
         }
     }
 
     @Override
-    public void onResultRegular(Object object) {
-        switch (action) {
-            case 0:
-                float f = (float) object;
+    public void onResultGas(Parametros datos, float precio) {
 
+    }
 
-                break;
+    @Override
+    public void onResultACPM(Parametros datos, float precio) {
 
-        }
+    }
+
+    @Override
+    public void onResultPremium(Parametros datos, float precio) {
+
+    }
+
+    @Override
+    public void onResultRegular(Parametros datos, float precio) {
+
     }
 }

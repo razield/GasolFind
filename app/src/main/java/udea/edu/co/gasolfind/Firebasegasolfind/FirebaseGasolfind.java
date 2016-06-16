@@ -21,7 +21,7 @@ public class FirebaseGasolfind {
 
     private DatabaseReference mDatabase;
 
-    private DBListener dbListener;
+    // private DBListener dbListener;
 
     private final String USUARIOS = "usuarios";
     private final String ESTACIONES = "estaciones";
@@ -92,7 +92,7 @@ public class FirebaseGasolfind {
 
 
 
-    public Parametros existeEstacion(final DBListener listener, Parametros datos){
+    public Parametros existeEstacion(final DBListener listener, final Parametros datos){
 
         //dbListener = listener;
         System.out.println("*********** placeid: " + datos.getPlace_id());
@@ -102,20 +102,21 @@ public class FirebaseGasolfind {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Estacion e = dataSnapshot.getValue(Estacion.class);
-                        Parametros resultados = new Parametros(true, "place_id", "name", "0.0", "0.0", "address", "phone", "0.0", "0.0", "0.0", "0.0");
+                        // Parametros resultados = new Parametros(true, "place_id", "name", "0.0", "0.0", "address", "phone", "0.0", "0.0", "0.0", "0.0");
 
                         boolean resultado;
                         if (e == null) {
                             // System.out.println("-------------------- siiiiiiiiii");
-                            //resultado = false;
+                            resultado = false;
 
-                            resultados.setExisteEstacion(false);
+                            // resultados.setExisteEstacion(false);
                         } else {
                             // System.out.println("-------------------- nooooooooooooo");
-                            resultados.setExisteEstacion(true);
+                            // resultados.setExisteEstacion(true);
+                            resultado = true;
                         }
-                        System.out.println("****FireBAse" + resultados.isExisteEstacion());
-                        listener.onResult(resultados);
+                        System.out.println("****FireBAse" + resultado);
+                        listener.onResult(datos, resultado);
                         // fbprueba.resultadoEstacion(resultado);
                         // cambiarExistenciaEstacion(resultado);
 
@@ -131,9 +132,9 @@ public class FirebaseGasolfind {
         return data;
     }
 
-    public float obtenerPrecioRegular(final DBListener listener, Parametros datos){
+    public float obtenerPrecioRegular(final DBListener listener, final Parametros datos){
 
-        dbListener = listener;
+        // dbListener = listener;
         mDatabase.child(ESTACIONES).child(datos.getPlace_id()).child("tipos_gasolina").child("REGULAR").addListenerForSingleValueEvent(
 
                 new ValueEventListener() {
@@ -147,7 +148,7 @@ public class FirebaseGasolfind {
                             resultado = Float.parseFloat(e);
                         }
 
-                        listener.onResultRegular(resultado);
+                        listener.onResultRegular(datos, resultado);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -158,9 +159,9 @@ public class FirebaseGasolfind {
         return precio_regular;
     }
 
-    public float obtenerPrecioPremium(final DBListener listener, Parametros datos){
+    public float obtenerPrecioPremium(final DBListener listener, final Parametros datos){
 
-        dbListener = listener;
+        // dbListener = listener;
         mDatabase.child(ESTACIONES).child(datos.getPlace_id()).child("tipos_gasolina").child("PREMIUM").addListenerForSingleValueEvent(
 
                 new ValueEventListener() {
@@ -174,7 +175,7 @@ public class FirebaseGasolfind {
                             resultado = Float.parseFloat(e);
                         }
 
-                        listener.onResultRegular(resultado);
+                        listener.onResultPremium(datos, resultado);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -185,9 +186,9 @@ public class FirebaseGasolfind {
         return precio_premium;
     }
 
-    public float obtenerPrecioACPM(final DBListener listener, Parametros datos){
+    public float obtenerPrecioACPM(final DBListener listener, final Parametros datos){
 
-        dbListener = listener;
+        // dbListener = listener;
         mDatabase.child(ESTACIONES).child(datos.getPlace_id()).child("tipos_gasolina").child("ACPM").addListenerForSingleValueEvent(
 
                 new ValueEventListener() {
@@ -201,7 +202,7 @@ public class FirebaseGasolfind {
                             resultado = Float.parseFloat(e);
                         }
 
-                        listener.onResultRegular(resultado);
+                        listener.onResultACPM(datos, resultado);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -212,9 +213,9 @@ public class FirebaseGasolfind {
         return precio_acpm;
     }
 
-    public float obtenerPrecioGas(final DBListener listener, Parametros datos){
+    public float obtenerPrecioGas(final DBListener listener, final Parametros datos){
 
-        dbListener = listener;
+        // dbListener = listener;
         mDatabase.child(ESTACIONES).child(datos.getPlace_id()).child("tipos_gasolina").child("GAS").addListenerForSingleValueEvent(
 
                 new ValueEventListener() {
@@ -228,7 +229,7 @@ public class FirebaseGasolfind {
                             resultado = Float.parseFloat(e);
                         }
 
-                        listener.onResultRegular(resultado);
+                        listener.onResultGas(datos, resultado);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {

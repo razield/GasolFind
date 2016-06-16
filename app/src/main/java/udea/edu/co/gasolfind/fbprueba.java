@@ -48,6 +48,7 @@ public class fbprueba implements DBListener {
         //fb.existeEstacion(this, "-olamundo");
     }
 
+    /*
     @Override
     public void onResult(Object object) {
         switch (action) {
@@ -68,5 +69,31 @@ public class fbprueba implements DBListener {
                 float f = (float) object;
                 break;
         }
+    }
+    */
+
+    @Override
+    public void onResult(Parametros datos, boolean existe) {
+
+    }
+
+    @Override
+    public void onResultGas(Parametros datos, float precio) {
+
+    }
+
+    @Override
+    public void onResultACPM(Parametros datos, float precio) {
+
+    }
+
+    @Override
+    public void onResultRegular(Parametros datos, float precio) {
+
+    }
+
+    @Override
+    public void onResultPremium(Parametros datos, float precio) {
+
     }
 }
