@@ -143,7 +143,7 @@ public class ConvertJSON implements DBListener {
             Parametros datos = new Parametros(false, place_id, place_name, String.valueOf(place_lat), String.valueOf(place_lng), place_address, "0", "0", "0","0", "0");
             Cursor cursor = gas_station.load(place_id);
 
-            if(cursor.getCount() == 0){
+            if(cursor.getCount() == 1){
                 Log.d("PrimerIF", "En el if");
                 action = 0;
                 gas_station.create(place_id, place_lat, place_lng, place_name, place_address, 0, 0, 0, 0, 0);
@@ -166,26 +166,20 @@ public class ConvertJSON implements DBListener {
         // Parametros datos = (Parametros) object;
         // System.out.println("****" + datos.isExisteEstacion());
 
-        if (existe) {
-            Log.d("En el segundo if", "En el if");
-
-            firebaseGasolfind.obtenerPrecioRegular(this, datos);
-            firebaseGasolfind.obtenerPrecioGas(this, datos);
-            firebaseGasolfind.obtenerPrecioACPM(this, datos);
-            firebaseGasolfind.obtenerPrecioPremium(this, datos);
-
-        } else {
-            Log.d("En el segundo if---", "En el else");
-
-            // Cursor cursor = gas_station.load(datos.getPlace_id());
-
-            // System.out.println("columnas " + cursor.getCount() + "place_id " + datos.getPlace_id());
+        if (!existe) {
+            //firebaseGasolfind.obtenerPrecioRegular(this, datos);
+            //firebaseGasolfind.obtenerPrecioGas(this, datos);
+            //firebaseGasolfind.obtenerPrecioACPM(this, datos);
+            //firebaseGasolfind.obtenerPrecioPremium(this, datos);
 
             firebaseGasolfind.registrarEstacion(datos.getPlace_id(), "0","0",datos.getName(), "11", datos.getAddress(), String.valueOf(datos.getLat()),String.valueOf(datos.getLng()),"24 horas");
-
             System.out.println("///// " + datos.getPlace_id());
-
             gas_station.create(datos.getPlace_id(), Double.parseDouble(datos.getLat()), Double.parseDouble(datos.getLng()), datos.getName(), datos.getAddress(), 0, 0, 0, 0, 0);
+        }else{
+            //QUE PASA SI NO EXISTE EN LA BD FIREBASE
+            //ACTUALIZAR DATOS EN LA BD LOCAL
+            //Cursor cursor = gas_station.load(datos.getPlace_id());
+            //System.out.println("datos " + datos.getPlace_id() + "slite " + cursor.getCount());
         }
     }
 
