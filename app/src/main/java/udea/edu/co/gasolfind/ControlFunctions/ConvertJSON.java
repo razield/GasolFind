@@ -174,38 +174,39 @@ public class ConvertJSON implements DBListener {
             datos.setAcpm(String.valueOf(firebaseGasolfind.obtenerPrecioACPM(this, datos)));
             datos.setPremium(String.valueOf(firebaseGasolfind.obtenerPrecioPremium(this, datos)));
 
-            gas_station.update_price_ACPM(datos.getPlace_id(), Float.parseFloat(datos.getAcpm()));
-            gas_station.update_price_PremiumGasoline(datos.getPlace_id(), Float.parseFloat(datos.getPremium()));
-            gas_station.update_price_RegularGasoline(datos.getPlace_id(), Float.parseFloat(datos.gasolina));
-            gas_station.update_price_GAS(datos.getPlace_id(), Float.parseFloat(datos.getGas()));
-
         } else {
             Log.d("En el segundo if---", "En el else");
+
             Cursor cursor = gas_station.load(datos.getPlace_id());
+
             System.out.println("columnas " + cursor.getCount() + "place_id " + datos.getPlace_id());
+
             firebaseGasolfind.registrarEstacion(datos.getPlace_id(), "0","0",datos.getName(), "11", datos.getAddress(), String.valueOf(datos.getLat()),String.valueOf(datos.getLng()),"24 horas");
+
             System.out.println("///// " + datos.getPlace_id());
+
             gas_station.create(datos.getPlace_id(), Double.parseDouble(datos.getLat()), Double.parseDouble(datos.getLng()), datos.getName(), datos.getAddress(), 0, 0, 0, 0, 0);
         }
     }
 
     @Override
     public void onResultGas(Parametros datos, float precio) {
-
+        gas_station.update_price_GAS(datos.getPlace_id(), precio);
     }
 
     @Override
     public void onResultACPM(Parametros datos, float precio) {
-
+        gas_station.update_price_ACPM(datos.getPlace_id(), precio);
     }
 
     @Override
     public void onResultPremium(Parametros datos, float precio) {
+        gas_station.update_price_PremiumGasoline(datos.getPlace_id(), precio);
 
     }
 
     @Override
     public void onResultRegular(Parametros datos, float precio) {
-
+        gas_station.update_price_RegularGasoline(datos.getPlace_id(), precio);
     }
 }
