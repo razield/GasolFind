@@ -19,7 +19,7 @@ public class fbprueba implements DBListener {
 */
 
         // Hay que añadir lo del place_id que es con Juan Felipe
-        fb.registrarEstacion("ChIJgT1hgd8oRI4Rnt6R-Cwcx_0", "12","4.6","EssoMobile","1234567","CalleX CarreraY","-25.6456","84.5645","L-D 5 a 20");
+        // fb.registrarEstacion("ChIJgT1hgd8oRI4Rnt6R-Cwcx_0", "12","4.6","EssoMobile","1234567","CalleX CarreraY","-25.6456","84.5645","L-D 5 a 20");
         /*
         fb.registrarEstacion("-KK6Pcao8XvkAsKF0NGp", "24","2.6","Exxon","7654321","Carrera M CarreraN","-25.6456","84.5645","L-D 5 a 20");
         fb.registrarEstacion("-KK6Pcam3QuDAgkV3AyD", "36","2.1","Pirat","7564542","Calle3 Carrera4","-25.6456","84.5645","L-D 5 a 20");
