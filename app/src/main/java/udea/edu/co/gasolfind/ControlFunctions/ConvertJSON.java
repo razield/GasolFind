@@ -166,25 +166,26 @@ public class ConvertJSON implements DBListener {
         // Parametros datos = (Parametros) object;
         // System.out.println("****" + datos.isExisteEstacion());
 
-        if(existe){
+        if (existe) {
             Log.d("En el segundo if", "En el if");
 
             datos.setGasolina(String.valueOf(firebaseGasolfind.obtenerPrecioRegular(this, datos)));
             datos.setGas(String.valueOf(firebaseGasolfind.obtenerPrecioGas(this, datos)));
             datos.setAcpm(String.valueOf(firebaseGasolfind.obtenerPrecioACPM(this, datos)));
             datos.setPremium(String.valueOf(firebaseGasolfind.obtenerPrecioPremium(this, datos)));
+
             gas_station.update_price_ACPM(datos.getPlace_id(), Float.parseFloat(datos.getAcpm()));
             gas_station.update_price_PremiumGasoline(datos.getPlace_id(), Float.parseFloat(datos.getPremium()));
             gas_station.update_price_RegularGasoline(datos.getPlace_id(), Float.parseFloat(datos.gasolina));
             gas_station.update_price_GAS(datos.getPlace_id(), Float.parseFloat(datos.getGas()));
 
-        }else{
+        } else {
             Log.d("En el segundo if---", "En el else");
-            //Cursor cursor = gas_station.load(place_id);
-            //System.out.println("columnas " + cursor.getCount() + "place_id " + place_id);
-            //firebaseGasolfind.registrarEstacion(place_id, "0","0",datos.getName(), "11", datos.getAddress(), String.valueOf(datos.getLat()),String.valueOf(datos.getLng()),"24 horas");
-            //System.out.println("///// " + datos.getPlace_id());
-            //gas_station.create(datos.getPlace_id(), Double.parseDouble(datos.getLat()), Double.parseDouble(datos.getLng()), datos.getName(), datos.getAddress(), 0, 0, 0, 0, 0);
+            Cursor cursor = gas_station.load(datos.getPlace_id());
+            System.out.println("columnas " + cursor.getCount() + "place_id " + datos.getPlace_id());
+            firebaseGasolfind.registrarEstacion(datos.getPlace_id(), "0","0",datos.getName(), "11", datos.getAddress(), String.valueOf(datos.getLat()),String.valueOf(datos.getLng()),"24 horas");
+            System.out.println("///// " + datos.getPlace_id());
+            gas_station.create(datos.getPlace_id(), Double.parseDouble(datos.getLat()), Double.parseDouble(datos.getLng()), datos.getName(), datos.getAddress(), 0, 0, 0, 0, 0);
         }
     }
 
