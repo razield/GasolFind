@@ -1,7 +1,5 @@
 package udea.edu.co.gasolfind.Interfaces;
 
-import udea.edu.co.gasolfind.ControlFunctions.Parametros;
-
 /**
  * Created by santiago on 6/15/16.
  */

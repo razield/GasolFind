@@ -19,13 +19,10 @@ import android.widget.ListView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Map;
-
 import udea.edu.co.gasolfind.Fragments.AboutFragment;
 import udea.edu.co.gasolfind.Fragments.ListFragment;
 import udea.edu.co.gasolfind.Fragments.MapFragment;
 import udea.edu.co.gasolfind.R;
-import udea.edu.co.gasolfind.fbprueba;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         FirebaseAuth.AuthStateListener {

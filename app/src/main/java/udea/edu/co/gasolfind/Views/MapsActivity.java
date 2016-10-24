@@ -1,12 +1,9 @@
 package udea.edu.co.gasolfind.Views;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -14,8 +11,6 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,7 +31,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import android.support.v7.app.AppCompatActivity;
 
 
 import org.json.JSONException;
@@ -46,7 +40,6 @@ import java.io.IOException;
 import udea.edu.co.gasolfind.BDClass.Gas_Station;
 import udea.edu.co.gasolfind.ControlFunctions.ConvertJSON;
 import udea.edu.co.gasolfind.R;
-import udea.edu.co.gasolfind.fbprueba;
 
 public class MapsActivity extends FragmentActivity implements  View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
