@@ -17,6 +17,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
@@ -37,7 +40,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-import udea.edu.co.gasolfind.BDClass.Gas_Station;
 import udea.edu.co.gasolfind.ControlFunctions.ConvertJSON;
 import udea.edu.co.gasolfind.R;
 
@@ -52,7 +54,8 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
     private Marker[] placeMarkers;
     Button btn1, btn2, btn3, btn4, btn5;
     ImageView edit1, edit2, edit3, edit4, edit5;
-    private Gas_Station gas_station;
+
+    protected RequestQueue fRequestQueue;
 
 
     //********************************************************************
@@ -73,7 +76,6 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
             StrictMode.setThreadPolicy(policy);
         }
 
-        fbprueba fb = new fbprueba();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -145,6 +147,8 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
         AppIndex.AppIndexApi.start(mGoogleApiClient, viewAction);
     }
 
+
+
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
@@ -175,13 +179,9 @@ public class MapsActivity extends FragmentActivity implements  View.OnClickListe
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
-            //Llevando mi posición actual al mapa
             LatLng myLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            //Colocando la camara en mi localización
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
             locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            //Cadacierto tiempo esta actualizando la ubicación
-            // locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 100, this);
             try {
                 updatePlaces();
             } catch (Exception e) {

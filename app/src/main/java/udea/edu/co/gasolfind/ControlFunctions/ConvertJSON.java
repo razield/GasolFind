@@ -22,7 +22,6 @@ import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import udea.edu.co.gasolfind.BDClass.Gas_Station;
 import udea.edu.co.gasolfind.R;
 
 /**
@@ -33,7 +32,6 @@ public class ConvertJSON {
     double lat;
     double lng;
     public Array array = null;
-    private Gas_Station gas_station;
     public int action = 0;
     public float gasolina, acpm, gas, premium, rate;
 
@@ -43,7 +41,6 @@ public class ConvertJSON {
     el json con las coordenadas de los places a buscar en este caso es 'gas_station' "
      */
     public ConvertJSON(double lat, double lng, Context context) {
-        gas_station = new Gas_Station(context);
         BufferedReader reader = null;
         this.lat = lat;
         this.lng = lng;
@@ -122,17 +119,7 @@ public class ConvertJSON {
             Float distance = user_location.distanceTo(location);
 
             Log.d("distance", String.valueOf(distance));
-
-
-
-            Cursor cursor = gas_station.load(place_id);
-
-            if (cursor.getCount() == 1) {
-                action = 0;
-                gas_station.create(place_id, place_lat, place_lng, place_name, place_address, 0, 0, 0, 0, 0);
-            }
-
-            if (distance <= 9044000) {
+           if (distance <= 9044000) {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.gas_station_green));
             } else if (distance > 9044000 && distance <= 9044500) {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.gas_station_yellow));

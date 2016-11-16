@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="udea.edu.co.gasolfind">
 
     <!--
@@ -12,6 +11,7 @@
     <!-- Permisos para geolocalizacion -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -19,11 +19,11 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:allowBackup="true"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -43,8 +43,8 @@
         <activity
             android:name=".Views.InitialActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:noHistory="true"
             android:label="@string/title_activity_main"
+            android:noHistory="true"
             android:theme="@style/AppThemeNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,14 +53,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Views.MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity
             android:name=".Views.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".Views.SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".Register_Activity"
+            android:label="@string/title_activity_register_" />
+        <activity android:name=".Views.RegisterActivity"></activity>
     </application>
 
 </manifest>
